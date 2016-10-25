@@ -2,7 +2,6 @@ import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.cluster import KMeans
 
-
 ##################################################
 #               Opinion Plot Class               #
 ##################################################
@@ -107,6 +106,17 @@ class OpinionPlot:
         plt.plot(avg[0], avg[1], 'o', c=col)
         plt.annotate(name, (avg[0], avg[1]))
 
+    def weightedAvg(self,xW, yW):
+        """weights when caluclateing avg"""
+        avg = []
+
+
+        for p in self.people:
+            for p in self.coordinates: #this is python i aint adding stuff to a class
+                pass
+
+        return avg
+
     def plotClusters(self, figNum, clusterNum):
         """ Performs K-Means Clustering on the average opinions of each entity"""
         # K Means clustering...
@@ -115,6 +125,15 @@ class OpinionPlot:
 
         # Converting to np array for scikit
         npPoints = self.avgPoints
+
+        #weights
+        xW = 5
+        yW = 2
+
+        #TODO: remove tmp play
+        for i in range(0,len(npPoints)):
+            npPoints[i][0] = npPoints[i][0] +xW
+            npPoints[i][0] = npPoints[i][0] -yW
 
         # Configuring K-Means Object
         kmeans = KMeans(n_clusters=clusterNum, n_init=1, init='random')
@@ -163,10 +182,12 @@ class OpinionPlot:
 
         # Plotting the actual cluster point.
         plt.plot(cx, cy, 'x', c=(0, 0, 0))
+        title = "Cluster Save"+ "Y:"+ str(yW) +" & " + "X:" + str(xW)
+        plt.savefig(title)
 
     def showPlots(self):
         """ Displays all plots created"""
-        plt.show()
+        #plt.show()
 
 
 ##################################################
