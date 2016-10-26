@@ -106,16 +106,27 @@ class OpinionPlot:
         plt.plot(avg[0], avg[1], 'o', c=col)
         plt.annotate(name, (avg[0], avg[1]))
 
-    def weightedAvg(self,xW, yW):
+    def alterWithWeights(self, xW, yW):
         """weights when caluclateing avg"""
-        avg = []
-
 
         for p in self.people:
-            for p in self.coordinates: #this is python i aint adding stuff to a class
-                pass
+            cords = p.coordiantes
+            p.coordiantes = (cords[0]*xW, cords[1]*yW)
+            p.calcAvg()
 
-        return avg
+        # Converting to np array for scikit
+        npPoints = self.avgPoints
+
+        # TODO: remove tmp play
+        for i in range(0, len(npPoints)):
+            npPoints[i][0] = npPoints[i][0] * xW
+            npPoints[i][0] = npPoints[i][0] * yW
+
+        #redo this but now it should be weighted differently
+        self.avgPoints = self.compileAvgPoints()
+
+        #TODO: orginal data lost could just assign back
+
 
     def plotClusters(self, figNum, clusterNum):
         """ Performs K-Means Clustering on the average opinions of each entity"""
@@ -127,13 +138,13 @@ class OpinionPlot:
         npPoints = self.avgPoints
 
         #weights
-        xW = 5
-        yW = 2
+        xW = 8
+        yW = 3
 
         #TODO: remove tmp play
         for i in range(0,len(npPoints)):
-            npPoints[i][0] = npPoints[i][0] +xW
-            npPoints[i][0] = npPoints[i][0] -yW
+            npPoints[i][0] = npPoints[i][0] * xW
+            npPoints[i][0] = npPoints[i][0] * yW
 
         # Configuring K-Means Object
         kmeans = KMeans(n_clusters=clusterNum, n_init=1, init='random')
